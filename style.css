@@ -1,0 +1,41 @@
+@font-face {
+  font-family: "DarkCastle";
+  src: url(fonts/Darkcastle.otf) format(woff2);
+  font-weight: normal;
+}
+
+:root {
+  background-color: black;
+  color: white;
+}
+
+.container {
+  width: 800px;
+  margin: 0 auto;
+}
+
+.iam {
+  text-align: center;
+  margin: 15px;
+}
+
+.alpwrk {
+  font-family: DarkCastle;
+  font-size: 22px;
+}
+
+.banners {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 800px;
+}
+
+.overlinks {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
