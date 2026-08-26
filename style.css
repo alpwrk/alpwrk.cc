@@ -39,3 +39,25 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.coding-projects hr {
+  color: rgb(29, 29, 29);
+  width: 99%;
+}
+
+.project {
+  font-size: larger;
+}
+
+.project h4 {
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
+
+.project a {
+  color: burlywood;
+}
+
+.project p {
+  margin-top: -1px;
+}
