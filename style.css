@@ -7,7 +7,7 @@
 :root {
   background-color: black;
   color: white;
-  background-image: url("images/reiascii.png");
+  background-image: url("images/larp.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom;
@@ -26,6 +26,13 @@
   background-color: black;
   padding: 4px 8px;
   width: fit-content;
+}
+
+.container h1:has(span.highlight),
+.container h3:has(span.highlight),
+.container h4:has(span.highlight) {
+  background-color: transparent;
+  padding: 0;
 }
 
 .highlight {
