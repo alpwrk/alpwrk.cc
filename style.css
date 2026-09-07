@@ -17,11 +17,28 @@
 .container {
   width: 800px;
   margin: 0 auto;
+  color: white;
+}
+
+.container h1,
+.container h3,
+.container h4 {
+  background-color: black;
+  padding: 4px 8px;
+  width: fit-content;
+}
+
+.highlight {
+  background-color: black;
+  color: white;
+  padding: 4px 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .iam {
   text-align: center;
-  margin: 15px;
+  margin: 15px auto;
 }
 
 .alpwrk {
