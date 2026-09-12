@@ -11,22 +11,34 @@ addEventListener("DOMContentLoaded", () => {
 
   const setText = (t) => { if (text.textContent !== t) text.textContent = t; };
   const setCover = (src) => {
-    if (src) {
-      if (cover.getAttribute("src") !== src) cover.setAttribute("src", src);
-      cover.classList.add("visible");
-    } else {
-      cover.removeAttribute("src");
-      cover.classList.remove("visible");
-    }
+    const target = src || "images/silence.jpg";
+    if (cover.getAttribute("src") !== target) cover.setAttribute("src", target);
+    cover.classList.add("visible");
+  };
+
+  let dots = 0;
+  let dotsTimer = null;
+
+  const startDots = () => {
+    setCover(null);
+    if (dotsTimer) return;
+    setText("NOTHING_PLAYING");
+    dotsTimer = setInterval(() => {
+      dots = (dots + 1) % 4;
+      setText("NOTHING_PLAYING" + ".".repeat(dots));
+    }, 400);
+  };
+
+  const stopDots = () => {
+    if (!dotsTimer) return;
+    clearInterval(dotsTimer);
+    dotsTimer = null;
   };
 
   const render = (s) => {
-    if (!s || s.status === "Offline") {
-      setText("Now playing: Offline");
-      return setCover(null);
-    }
+    if (!s || s.status === "Offline" || s.status === "Paused") return startDots();
+    stopDots();
     setCover(s.cover);
-    if (s.status === "Paused") return setText("Paused");
     const track = [s.title, s.artist].filter(Boolean).join(" – ") || "Unknown";
     setText(`${track}${s.album ? ` (${s.album})` : ""}`);
   };
@@ -55,5 +67,6 @@ addEventListener("DOMContentLoaded", () => {
     ws.onerror = () => ws.close();
   };
 
+  render(null);
   connect();
 });
