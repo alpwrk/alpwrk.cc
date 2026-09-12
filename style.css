@@ -7,7 +7,7 @@
 :root {
   background-color: black;
   color: white;
-  background-image: url("images/larp.png");
+  background-image: url("images/bgls.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom;
@@ -85,6 +85,7 @@
 
 .project a {
   color: burlywood;
+  text-decoration: none;
 }
 
 .project p {
