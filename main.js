@@ -56,7 +56,7 @@ addEventListener("DOMContentLoaded", () => {
       const art = results && results[0] && results[0].artworkUrl100;
       return art ? art.replace("100x100bb", "600x600bb") : null;
     } catch (_) {
-      return; // lookup failed, retry on the next poll
+      return;
     }
   };
 

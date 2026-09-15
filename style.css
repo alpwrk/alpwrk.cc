@@ -43,6 +43,22 @@
   -webkit-box-decoration-break: clone;
 }
 
+.link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: -20px;
+    margin-bottom: -35px;
+}
+
+.link a {
+    margin-top: 5px;
+}
+
+.arrows {
+    margin-left: auto;
+}
+
 .nowplaying {
   width: 99%;
   box-sizing: border-box;
