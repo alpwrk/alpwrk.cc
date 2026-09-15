@@ -35,38 +35,60 @@ addEventListener("DOMContentLoaded", () => {
     dotsTimer = null;
   };
 
-  const render = (s) => {
-    if (!s || s.status === "Offline" || s.status === "Paused") return startDots();
-    stopDots();
-    setCover(s.cover);
-    const track = [s.title, s.artist].filter(Boolean).join(" – ") || "Unknown";
-    setText(`${track}${s.album ? ` (${s.album})` : ""}`);
+  cover.addEventListener("error", () => {
+    if (cover.getAttribute("src") !== "images/silence.jpg") {
+      cover.setAttribute("src", "images/silence.jpg");
+    }
+  });
+
+  const covers = new Map();
+  let currentKey = null;
+
+  const coverFor = async (meta) => {
+    if (meta.mbid_mapping && meta.mbid_mapping.caa_release_mbid) {
+      return `https://coverartarchive.org/release/${meta.mbid_mapping.caa_release_mbid}/front-250`;
+    }
+    try {
+      const q = new URLSearchParams({ term: `${meta.artist_name} ${meta.track_name}`, entity: "song", limit: "1" });
+      const res = await fetch(`https://itunes.apple.com/search?${q}`);
+      if (!res.ok) throw new Error(res.status);
+      const { results } = await res.json();
+      const art = results && results[0] && results[0].artworkUrl100;
+      return art ? art.replace("100x100bb", "600x600bb") : null;
+    } catch (_) {
+      return; // lookup failed, retry on the next poll
+    }
   };
 
-  let delay = 1000;
+  const render = (meta) => {
+    if (!meta) { currentKey = null; return startDots(); }
+    stopDots();
+    const key = `${meta.artist_name}|${meta.track_name}`;
+    currentKey = key;
+    setCover(covers.has(key) ? covers.get(key) : null);
+    const track = [meta.track_name, meta.artist_name].filter(Boolean).join(" – ") || "Unknown";
+    setText(`${track}${meta.release_name ? ` (${meta.release_name})` : ""}`);
+    if (!covers.has(key)) {
+      coverFor(meta).then((url) => {
+        if (url === undefined) return;
+        covers.set(key, url);
+        if (currentKey === key) setCover(url);
+      });
+    }
+  };
 
-  const connect = () => {
-    const ws = new WebSocket("wss://sonstream.alpwrk.cc");
-
-    const heartbeat = setTimeout(() => ws.close(), 10000);
-
-    ws.onopen = () => { delay = 1000; };
-
-    ws.onmessage = (e) => {
-      clearTimeout(heartbeat);
-      try { render(JSON.parse(e.data)); } catch (_) {}
-    };
-
-    ws.onclose = () => {
-      clearTimeout(heartbeat);
+  const poll = async () => {
+    try {
+      const res = await fetch("https://api.listenbrainz.org/1/user/alpwrk/playing-now");
+      if (!res.ok) throw new Error(res.status);
+      const { payload } = await res.json();
+      render(payload.playing_now && payload.listens.length ? payload.listens[0].track_metadata : null);
+    } catch (_) {
       render(null);
-      setTimeout(connect, delay);
-      delay = Math.min(delay * 2, 30000);
-    };
-
-    ws.onerror = () => ws.close();
+    }
   };
 
   render(null);
-  connect();
+  poll();
+  setInterval(poll, 30000);
 });
