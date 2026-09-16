@@ -1,7 +1,9 @@
-
 if (window.innerWidth <= 768 && !new URLSearchParams(window.location.search).has("proceed")) {
   window.location.href = "/mobile.html";
 }
+
+const LASTFM_API_KEY = "bfc90edd572a475a7f08b89d3da998c5";
+const LASTFM_USER = "alpwrk";
 
 addEventListener("DOMContentLoaded", () => {
   const box = document.getElementById("nowplaying");
@@ -79,10 +81,25 @@ addEventListener("DOMContentLoaded", () => {
 
   const poll = async () => {
     try {
-      const res = await fetch("https://api.listenbrainz.org/1/user/alpwrk/playing-now");
+      const q = new URLSearchParams({
+        method: "user.getrecenttracks",
+        user: LASTFM_USER,
+        api_key: LASTFM_API_KEY,
+        format: "json",
+        limit: "1"
+      });
+      const res = await fetch(`https://ws.audioscrobbler.com/2.0/?${q}`);
       if (!res.ok) throw new Error(res.status);
-      const { payload } = await res.json();
-      render(payload.playing_now && payload.listens.length ? payload.listens[0].track_metadata : null);
+      const data = await res.json();
+      const track = data.recenttracks && data.recenttracks.track && data.recenttracks.track[0];
+      const isPlaying = track && track["@attr"] && track["@attr"].nowplaying === "true";
+
+      render(isPlaying ? {
+        artist_name: track.artist["#text"],
+        track_name: track.name,
+        release_name: track.album["#text"],
+        mbid_mapping: null
+      } : null);
     } catch (_) {
       render(null);
     }
@@ -90,5 +107,5 @@ addEventListener("DOMContentLoaded", () => {
 
   render(null);
   poll();
-  setInterval(poll, 30000);
+  setInterval(poll, 10000);
 });
