@@ -21,6 +21,7 @@
 }
 
 .container h1,
+.container h2,
 .container h3,
 .container h4 {
   background-color: black;
@@ -41,6 +42,19 @@
   padding: 4px 8px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+}
+
+.lto {
+    margin-left: 4px;
+    margin-bottom: -10px;
+}
+
+.larp {
+  display: block;
+  max-width: 750px;
+  margin: 0 auto;
+  object-fit: contain;
+  border: 5px solid white;
 }
 
 .link {
@@ -100,6 +114,12 @@
   margin: 25px auto;
 }
 
+/*
+audio {
+    width: 800px;
+}
+*/
+
 .banners {
   margin-top: 18px;
   margin-bottom: 18px;
@@ -118,4 +138,12 @@
 a {
   color: burlywood;
   text-decoration: none;
+}
+
+footer {
+    text-align: center;
+    background-color: black;
+    padding: 4px 8px;
+    width: fit-content;
+    margin: 0 auto;
 }
